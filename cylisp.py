@@ -23,6 +23,9 @@ def parse(tokens):
 def default_env():
 
     import operator as op
+
+    def _atom(x):
+        return type(x) != list or x == []
     
     return {
         # control charecters
@@ -35,11 +38,11 @@ def default_env():
         '>=' : op.ge      , '<=' : op.le , '=' : op.eq ,
 
         # LISP primitive operators
-        'eq'      : lambda x, y: x == y or [],
-        'car'     : lambda x: x[0],
-        'cdr'     : lambda x: x[1:],
+        'eq?'     : lambda x, y: x == y or [],
+        'car'     : lambda x: not _atom(x) and x[0]  or [],
+        'cdr'     : lambda x: not _atom(x) and x[1:] or [],
         'cons'    : lambda x, y: [x] + [y],
-        'atom'    : lambda x: type(x) != list or x == [] or [],
+        'atom'    : lambda x: _atom(x) or [],
 
         # other functions
         'begin'   : lambda *x: x[-1],
