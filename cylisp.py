@@ -50,8 +50,8 @@ def default_env():
 
         # other functions
         'begin'   : lambda *x: x[-1],
-        'display' : lambda *s: print(*s[-1], end = ''),
-        'newline' : lambda: sys.stdout.write('\n')
+        'display' : lambda  s: print(prettify(s), end = '') or '',
+        'newline' : lambda   : sys.stdout.write('\n')
     }
 
 def evaluate(tree, env):
