@@ -1,33 +1,63 @@
 def tokenize(prog):
-    return prog.replace('(', ' ( ').replace(')', ' ) ').split()
+    return prog.replace('(', " ( ").replace(')', " ) ").split()
 
-# TODO: fix paren error checking 
+def atomic(token):
+    # TODO: too ungly, re-write required
+
+    try               : return int(token)
+    except ValueError :
+        try               : return float(token)
+        except ValueError : return str(token)
+
 def parse(tokens):
-    def _parse_sexp(tokens, in_paren):
-        result = list()
-        while len(tokens) != 0:
-            if tokens[0] == '(':
-                # pop off '(' and append a list recursively
-                tokens.pop(0) 
-                result.append(_parse_sexp(tokens, True))
-            elif tokens[0] == ')':
-                return in_paren and result or None
-            else:
-                result.append(tokens[0])
-
-            len(tokens) != 0 and tokens.pop(0)
-     
-        return not in_paren and result or None
+    tree = []
+    while tokens:
+        token = tokens.pop(0)
+        if   token == ')' : break
+        elif token == '(' : tree += [parse(tokens)]
+        else              : tree += [atomic(token)]
     
-    sexp = _parse_sexp(tokens, False)
-    
-    if sexp == None or None in sexp: 
-        return None
-    return sexp
+    return tree
 
-# prototype
-print("CyLisp Version 1.0")
-tokens = input(">>> ")
-parsed = parse(tokenize(tokens))
-if parsed == None: print("Error: Unmatched paren(s)")
-else: print(parsed)
+def default_env():
+    return {
+        '+' : lambda x, y: x +  y,
+        '-' : lambda x, y: x -  y,
+        '*' : lambda x, y: x *  y,
+        '/' : lambda x, y: x /  y,
+        '%' : lambda x, y: x %  y,
+        '^' : lambda x, y: x ** y,
+    }
+
+def evaluate(tree, env):
+    # TODO: more elegant re-implementation required
+    
+    if       isinstance(tree, str)  : return env[tree]
+    elif not isinstance(tree, list) : return tree
+
+    if tree[0] == 'define':
+        (symbol, expression) = tree[1:]
+        env[symbol] = evaluate(expression, env)
+        
+        return symbol
+    
+    else:
+        operands = []
+        operator = evaluate(tree[0], env)
+
+        for operand in tree[1:]:
+            operands += [evaluate(operand, env)]
+    
+        return operator(*operands)
+
+def repl():
+    print("Welcome to CyLISP v0.1-alpha.")
+    
+    env = default_env()
+    
+    while True:
+        program = input("> ")
+        if program:
+            print(evaluate(parse(tokenize(program))[0], env))
+
+__name__ == "__main__" and repl()
