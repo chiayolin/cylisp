@@ -47,13 +47,13 @@ def default_env():
     }
 
 def evaluate(tree, env):
-    print(tree)
+    
     # symbols and constant literals
     if       isinstance(tree, str)  : return env[tree]
     elif not isinstance(tree, list) : return tree
     
     # special cases
-    if tree[0] == 'quote': 
+    if tree[0] in ("quote", '"', "'"): 
         
         return tree[1:][0]
     
