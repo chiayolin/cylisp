@@ -21,17 +21,33 @@ def parse(tokens):
     return tree
 
 def default_env():
+
+    import operator as op
     
     return {
-        '+' : lambda x, y: x +  y,
-        '-' : lambda x, y: x -  y,
-        '*' : lambda x, y: x *  y,
-        '/' : lambda x, y: x /  y,
-        '%' : lambda x, y: x %  y,
-        '^' : lambda x, y: x ** y,
+        # control charecters
+        '#\\0' : '\0', '#\\a' : '\a', '#\\b' : '\b',
+        '#\\t' : '\t', '#\\n' : '\n', '#\\r' : '\r',
+
+        # arithmetic operators
+        '+'  : op.add     , '-'  : op.sub, '*' : op.mul,
+        '/'  : op.truediv , '>'  : op.gt , '<' : op.lt , 
+        '>=' : op.ge      , '<=' : op.le , '=' : op.eq ,
+
+        # LISP primitive operators
+        'eq'      : lambda x, y: x == y or [],
+        'car'     : lambda x: x[0],
+        'cdr'     : lambda x: x[1:],
+        'cons'    : lambda x, y: [x] + [y],
+        'atom'    : lambda x: type(x) != list or x == [] or [],
+
+        # other functions
+        'begin'   : lambda *x: x[-1],
+        'display' : lambda *s: print(*s[-1], end = ''),
     }
 
 def evaluate(tree, env):
+    print(tree)
     # symbols and constant literals
     if       isinstance(tree, str)  : return env[tree]
     elif not isinstance(tree, list) : return tree
@@ -76,7 +92,7 @@ def repl():
     print("Welcome to CyLISP v0.1-alpha.")
     
     env = default_env()
-    
+
     while True:
         try:
             program = input("> ")
@@ -86,7 +102,7 @@ def repl():
             return
         
         if program:
-            print(evaluate(parse(tokenize(program))[0], env))
+            print("=>", evaluate(parse(tokenize(program))[0], env))
 
     return
 
