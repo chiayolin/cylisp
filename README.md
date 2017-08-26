@@ -1,2 +1,2 @@
-# cylisp
-CyLisp - A Minimalistic Scheme-Compatible Lisp Interpreter
+# CyLISP
+CyLISP is a minimalistic Scheme-inspired Lisp machine.
