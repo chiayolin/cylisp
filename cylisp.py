@@ -51,8 +51,6 @@ def default_env():
         'atom?'   : lambda x: _atom(x) or [],
 
         # other primitives
-        'list'    : lambda *x: [*x],
-        'pair?'   : lambda  x: len(x) == 2,
         'begin'   : lambda *x: x[-1],
         'display' : lambda  s: print(prettify(s), end = '') or '',
         'newline' : lambda   : sys.stdout.write('\n')
