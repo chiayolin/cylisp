@@ -1,7 +1,31 @@
 (begin
 
+  (define else #t)
+
   (define nil (quote ()))
   (define null? (lambda (lst) (if (eq? lst nil) #t #f)))
+
+  (define not (lambda (a)   (if a #f #t)))
+  (define or  (lambda (a b) (if a #t  b)))
+  (define and (lambda (a b) (if a  b #f)))
+  (define xor (lambda (a b) (or (and (not a) b) (and a (not b)))))
+
+  (define ++  (lambda (n)   (+ n 1)))
+  (define --  (lambda (n)   (- n 1)))
+  (define neg (lambda (n)   (- 0 n)))
+
+  (define abs (lambda (n)   (if (<= n 0) (neg n) n)))
+  (define pow (lambda (b e) (if (= e 1) b (* b (pow b (-- e))))))
+  (define !   (lambda (n)   (if (= n 1) 1 (* n (! (-- n))))))
+
+  (define map
+    (lambda (fn lst)
+      (if (null? lst) lst
+        (cons (fn (car lst)) (map fn (cdr lst))))))
+
+  (define range
+    (lambda (a b)
+      (if (= a b) (quote ()) (cons a (range (++ a) b)))))
 
   (define caar   (lambda (x) (car (car x))))
   (define cadr   (lambda (x) (car (cdr x))))
@@ -31,23 +55,5 @@
   (define cddadr (lambda (x) (cdr (cdr (car (cdr x))))))
   (define cdddar (lambda (x) (cdr (cdr (cdr (car x))))))
   (define cddddr (lambda (x) (cdr (cdr (cdr (cdr x))))))
-
-  (define map
-    (lambda (fn lst)
-      (if (null? lst) lst 
-        (cons (fn (car lst)) (map fn (cdr lst))))))
-
-  (define not (lambda (a)   (if a #f #t)))
-  (define or  (lambda (a b) (if a #t  b)))
-  (define and (lambda (a b) (if a  b #f)))
-  (define xor (lambda (a b) (or (and (not a) b) (and a (not b)))))
-
-  (define ++  (lambda (n)   (+ n 1)))
-  (define --  (lambda (n)   (- n 1)))
-  (define neg (lambda (n)   (- 0 n)))
-  (define abs (lambda (n)   (if (<= n 0) (neg n) n)))
-  
-  (define pow (lambda (b e) (if (= e 1) b (* b (pow b (-- e))))))
-  (define !   (lambda (n)   (if (= n 1) 1 (* n (! (-- n))))))
 
 )
