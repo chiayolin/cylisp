@@ -26,6 +26,7 @@ def default_env():
     import operator as op
 
     def _atom(x):
+
         return type(x) != list or x == []
 
     return {
@@ -40,15 +41,17 @@ def default_env():
         '+'  : op.add     , '-'  : op.sub, '*' : op.mul,
         '/'  : op.truediv , '>'  : op.gt , '<' : op.lt ,
         '>=' : op.ge      , '<=' : op.le , '=' : op.eq ,
+        '//' : op.floordiv,
 
         # LISP primitive operators
         'eq?'     : lambda x, y: x == y or [],
         'car'     : lambda x: not _atom(x) and x[0]  or [],
         'cdr'     : lambda x: not _atom(x) and x[1:] or [],
-        'cons'    : lambda x, y: [x] + [y],
-        'atom'    : lambda x: _atom(x) or [],
+        'cons'    : lambda x, y: [x] + list(y),
+        'atom?'   : lambda x: _atom(x) or [],
 
-        # other functions
+        # other primitives
+        'list'    : lambda *x: [*x],
         'begin'   : lambda *x: x[-1],
         'display' : lambda  s: print(prettify(s), end = '') or '',
         'newline' : lambda   : sys.stdout.write('\n')
@@ -63,7 +66,7 @@ def evaluate(tree, env):
     # special cases
     if tree[0] in ("quote", '"', "'"):
 
-        return tree[1:][0]
+        return tree[1:][0] and tree[1:] or []
 
     elif tree[0] == 'define':
         (symbol, expression) = tree[1:]
