@@ -77,6 +77,15 @@ def evaluate(tree, env):
 
         return evaluate(expression, env)
 
+    elif tree[0] == 'cond':
+        clauses = tree[1:]
+        for clause in clauses:
+            if evaluate(clause[0], env):
+
+                return evaluate(clause[1], env)
+
+        return
+
     elif tree[0] == 'lambda':
         (formal_param, body) = tree[1:]
 
