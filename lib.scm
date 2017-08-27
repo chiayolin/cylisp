@@ -26,15 +26,6 @@
   (define pow (lambda (b e) (if (= e 1) b (* b (pow b (-- e))))))
   (define !   (lambda (n)   (if (= n 1) 1 (* n (! (-- n))))))
 
-  (define map
-    (lambda (fn lst)
-      (if (null? lst) lst
-        (cons (fn (car lst)) (map fn (cdr lst))))))
-
-  (define range
-    (lambda (a b)
-      (if (= a b) (quote ()) (cons a (range (++ a) b)))))
-
   (define caar   (lambda (x) (car (car x))))
   (define cadr   (lambda (x) (car (cdr x))))
   (define cdar   (lambda (x) (cdr (car x))))
@@ -63,5 +54,31 @@
   (define cddadr (lambda (x) (cdr (cdr (car (cdr x))))))
   (define cdddar (lambda (x) (cdr (cdr (cdr (car x))))))
   (define cddddr (lambda (x) (cdr (cdr (cdr (cdr x))))))
+
+  (define append
+    (lambda (x y)
+      (if (null? x) y
+        (cons (car x) (append (cdr x) y)))))
+
+  (define pair
+    (lambda (x y)
+      (cond ((and (null? x) (null? y)) (' ()))
+            ((and (not (atom? x)) (not (atom? y)))
+             (cons (list (car x) (car y))
+                   (pair (cdr x) (cdr y)))))))
+
+  (define assoc
+    (lambda (x y)
+      (if (eq? (caar y) x) (cadar y)
+        (assoc x (cdr y)))))
+
+  (define map
+    (lambda (fn lst)
+      (if (null? lst) lst
+        (cons (fn (car lst)) (map fn (cdr lst))))))
+
+  (define range
+    (lambda (a b)
+      (if (= a b) (quote ()) (cons a (range (++ a) b)))))
 
 )
