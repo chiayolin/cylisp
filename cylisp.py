@@ -52,6 +52,7 @@ def default_env():
 
         # other primitives
         'list'    : lambda *x: [*x],
+        'pair?'   : lambda  x: len(x) == 2,
         'begin'   : lambda *x: x[-1],
         'display' : lambda  s: print(prettify(s), end = '') or '',
         'newline' : lambda   : sys.stdout.write('\n')
@@ -66,7 +67,9 @@ def evaluate(tree, env):
     # special cases
     if tree[0] in ("quote", '"', "'"):
 
-        return tree[1:][0] and tree[1:] or []
+        if   not tree[1:][0]    : return []
+        elif len(tree[1:]) == 1 : return tree[1:][0]
+        else                    : return tree[1:]
 
     elif tree[0] == 'define':
         (symbol, expression) = tree[1:]
