@@ -2,7 +2,7 @@
 
   (define else #t)
 
-  (define nil (quote ()))
+  (define nil   (quote ()))
   (define apply (lambda (f x) (f x)))
   (define null? (lambda (lst) (if (eq? lst nil) #t #f)))
 
@@ -25,7 +25,7 @@
   (define abs (lambda (n)   (if (<= n 0) (neg n) n)))
   (define pow (lambda (b e) (if (= e 1) b (* b (pow b (-- e))))))
   (define !   (lambda (n)   (if (= n 1) 1 (* n (! (-- n))))))
-
+  
   (define caar   (lambda (x) (car (car x))))
   (define cadr   (lambda (x) (car (cdr x))))
   (define cdar   (lambda (x) (cdr (car x))))
@@ -55,6 +55,9 @@
   (define cdddar (lambda (x) (cdr (cdr (cdr (car x))))))
   (define cddddr (lambda (x) (cdr (cdr (cdr (cdr x))))))
 
+  (define list 
+    (lambda (x y) (cons x (cons y (' ())))))
+  
   (define append
     (lambda (x y)
       (if (null? x) y
@@ -80,5 +83,43 @@
   (define range
     (lambda (a b)
       (if (= a b) (quote ()) (cons a (range (++ a) b)))))
+  
+  (define eval 
+    (lambda (e a)
+      (cond
+        ((atom? e) (assoc e a))
+        ((atom? (car e))
+         (cond
+           ((eq? (car e) (' quote)) (cadr e))
+           ((eq? (car e) (' atom?)) (atom?  (eval (cadr e) a)))
+           ((eq? (car e) (' eq?))   (eq?    (eval (cadr e) a)
+                                            (eval (caddr e) a)))
+           ((eq? (car e) (' car))   (car    (eval (cadr e) a)))
+           ((eq? (car e) (' cdr))   (cdr    (eval (cadr e) a)))
+           ((eq? (car e) (' cons))  (cons   (eval (cadr e) a)
+                                            (eval (caddr e) a)))
+           ((eq? (car e) (' cond))  (evcon  (cdr e) a))
+           (else (eval (cons (assoc (car e) a)
+                              (cdr e))
+                       a))))
+        ((eq? (caar e) (' label))
+         (eval (cons (caddar e) (cdr e))
+               (cons (list (cadar e) (car e)) a)))
+        ((eq? (caar e) (' lambda))
+         (eval (caddar e)
+               (append (pair (cadar e) (evlis (cdr e) a))
+                       a))))))
+  
+    (define evcon 
+      (lambda (c a)
+        (cond ((eval (caar c) a)
+               (eval (cadar c) a))
+              (else (evcon (cdr c) a)))))
+
+    (define evlis 
+      (lambda (m a)
+        (cond ((null? m) (' ()))
+              (else (cons (eval  (car m) a)
+                          (evlis (cdr m) a))))))
 
 )
