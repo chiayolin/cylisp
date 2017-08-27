@@ -3,6 +3,7 @@
   (define else #t)
 
   (define nil (quote ()))
+  (define apply (lambda (f x) (f x)))
   (define null? (lambda (lst) (if (eq? lst nil) #t #f)))
 
   (define not (lambda (a)   (if a #f #t)))
@@ -13,6 +14,13 @@
   (define ++  (lambda (n)   (+ n 1)))
   (define --  (lambda (n)   (- n 1)))
   (define neg (lambda (n)   (- 0 n)))
+  (define mod (lambda (x y) (- x (* (// x y) y))))
+
+  (define negative? (lambda (n) (< n 0)))
+  (define zero?     (lambda (n) (= n 0)))
+  (define positive? (lambda (n) (> n 0)))
+  (define even?     (lambda (n) (= (mod n 2) 0)))
+  (define odd?      (lambda (n) (not (even? n))))
 
   (define abs (lambda (n)   (if (<= n 0) (neg n) n)))
   (define pow (lambda (b e) (if (= e 1) b (* b (pow b (-- e))))))
