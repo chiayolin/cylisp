@@ -7,10 +7,13 @@
   (define null? (lambda (lst)   (eq? lst nil)))
   (define apply (lambda (f x)   (f x)))
 
-  (define not (lambda (a)   (if a #f #t)))
-  (define or  (lambda (a b) (if a #t  b)))
-  (define and (lambda (a b) (if a  b #f)))
-  (define xor (lambda (a b) (or (and (not a) b) (and a (not b)))))
+  (define buf  (lambda (a)   a))
+  (define not  (lambda (a)   (if a #f #t)))
+  (define or   (lambda (a b) (if a #t  b)))
+  (define and  (lambda (a b) (if a  b #f)))
+  (define nor  (lambda (a b) (not (or a b))))
+  (define nand (lambda (a b) (not (and a b))))
+  (define xor  (lambda (a b) (or (and (not a) b) (and a (not b)))))
 
   (define ++  (lambda (n)   (+ n 1)))
   (define --  (lambda (n)   (- n 1)))
