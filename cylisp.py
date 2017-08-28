@@ -119,7 +119,7 @@ def repl():
     env = default_env()
 
     # load library
-    with open("lib.scm", 'r') as f:
+    with open("cylib.scm", 'r') as f:
          content = f.readlines()
     library = ''.join([x.strip() for x in content])
     evaluate(parse(tokenize(library))[0], env)
