@@ -4,7 +4,7 @@
 
   (define nil   (quote ()))
   (define apply (lambda (f x) (f x)))
-  (define null? (lambda (lst) (if (eq? lst nil) #t #f)))
+  (define null? (lambda (lst) (eq? lst nil)))
 
   (define not (lambda (a)   (if a #f #t)))
   (define or  (lambda (a b) (if a #t  b)))
