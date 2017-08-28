@@ -1,10 +1,11 @@
 (begin
 
   (define else #t)
+  (define nil  (' ()))
 
-  (define nil   (quote ()))
-  (define apply (lambda (f x) (f x)))
+  (define if    (lambda (p e a) (cond (p e) (else a))))
   (define null? (lambda (lst) (eq? lst nil)))
+  (define apply (lambda (f x) (f x)))
 
   (define not (lambda (a)   (if a #f #t)))
   (define or  (lambda (a b) (if a #t  b)))
