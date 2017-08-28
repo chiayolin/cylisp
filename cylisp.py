@@ -45,8 +45,8 @@ def default_env():
 
         # LISP primitive operators
         'eq?'     : lambda x, y: x == y or [],
-        'car'     : lambda x: not _atom(x) and x[0]  or [],
-        'cdr'     : lambda x: not _atom(x) and x[1:] or [],
+        'car'     : lambda x: x[0]  if not _atom(x) else [],
+        'cdr'     : lambda x: x[1:] if not _atom(x) else [],
         'cons'    : lambda x, y: [x] + list(y),
         'atom?'   : lambda x: _atom(x) or [],
 
@@ -65,9 +65,9 @@ def evaluate(tree, env):
     # special cases
     if tree[0] in ("quote", '"', "'"):
 
-        if   not tree[1:][0]    : return []
-        elif len(tree[1:]) == 1 : return tree[1:][0]
-        else                    : return tree[1:]
+        if   tree[1:][0]   == [] : return []
+        elif len(tree[1:]) == 1  : return tree[1:][0]
+        else                     : return tree[1:]
 
     elif tree[0] == 'define':
         (symbol, expression) = tree[1:]
