@@ -33,10 +33,6 @@ def default_env():
         # boolean values
         '#t' : True, '#f' : False,
 
-        # control charecters
-        '#\\0' : '\0', '#\\a' : '\a', '#\\b' : '\b',
-        '#\\t' : '\t', '#\\n' : '\n', '#\\r' : '\r',
-
         # arithmetic operators
         '+'  : op.add     , '-'  : op.sub, '*' : op.mul,
         '/'  : op.truediv , '>'  : op.gt , '<' : op.lt ,
@@ -74,12 +70,6 @@ def evaluate(tree, env):
         env[symbol] = evaluate(expression, env)
 
         return symbol
-
-    elif tree[0] == 'if':
-        (predi, conseq, alter) = tree[1:]
-        expression = (conseq if evaluate(predi, env) else alter)
-
-        return evaluate(expression, env)
 
     elif tree[0] == 'cond':
         clauses = tree[1:]
