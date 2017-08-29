@@ -1,9 +1,8 @@
 (begin
 
-  (define else #t)
-  (define nil  (' ()))
+  (define else  #t)
+  (define nil   (' ()))
 
-  (define if    (lambda (p e a) (cond (p e) (else a))))
   (define null? (lambda (lst)   (eq? lst nil)))
   (define apply (lambda (f x)   (f x)))
 

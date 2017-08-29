@@ -71,6 +71,12 @@ def evaluate(tree, env):
 
         return symbol
 
+    elif tree[0] == 'if':
+        (predi, conseq, alter) = tree[1:]
+        expression = (conseq if evaluate(predi, env) else alter)
+
+        return evaluate(expression, env)
+
     elif tree[0] == 'cond':
         clauses = tree[1:]
         for clause in clauses:
